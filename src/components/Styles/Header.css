@@ -1,0 +1,108 @@
+/* Header.css - Ensure responsiveness and fixed positioning */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@900&display=swap');
+
+.chat-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 10px 20px;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 900;
+  z-index: 2;
+  box-sizing: border-box;
+}
+
+.logo-and-text {
+  display: flex;
+  align-items: center;
+}
+
+.chat-logo {
+  height: 50px; /* Adjusted for consistent sizing */
+  width: auto; /* Maintain aspect ratio */
+  margin-right: 15px;
+}
+
+.welcome, .H1 {
+  color: #9c0058;
+  margin: 0;
+  padding: 0;
+  font-size: 1rem; /* Adjust based on preference */
+}
+
+.contact-and-minimize {
+  display: flex;
+  align-items: center;
+}
+
+.contact-us-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  border-radius: 15px;
+  padding: 5px 10px;
+  margin-right: 10px; /* Ensure spacing between elements */
+}
+
+.beta {
+  color: #9c0058;
+  margin-right: 10px; /* Adjusted spacing */
+}
+
+.icon-phone {
+  margin-right: 5px;
+}
+
+.phone-number, .phone-number-plus {
+  color: #9c0058;
+  text-decoration: none;
+  margin: 0 5px; /* Adjusted spacing */
+}
+
+.minimize-button {
+  background: none;
+  border: none;
+  color: #9c0058;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .chat-header {
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+  }
+
+  .logo-and-text, .contact-and-minimize {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    margin-bottom: 5px;
+  }
+
+  .contact-us-container, .beta, .minimize-button {
+    margin-top: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chat-header {
+    padding: 5px;
+  }
+
+  .chat-logo {
+    height: 40px; /* Smaller logo on very small screens */
+  }
+
+}
+
+/* Window.css - Assuming this file also contains styles related to the chat window layout */

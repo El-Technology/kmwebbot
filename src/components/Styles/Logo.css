@@ -1,0 +1,15 @@
+.chat-assistant-logo {
+  background-color: transparent; /* No background */
+  border: none; /* No border */
+  cursor: pointer; /* Change cursor on hover */
+  padding: 0; /* No padding */
+  position: fixed; /* Fixed position */
+  bottom: 30px; /* Position from the bottom */
+  right: 30px; /* Position from the left, changed from right to left */
+  z-index: 1001; /* Above the chat window */
+}
+
+.chat-assistant-logo img {
+  width: 100px; /* Smaller size for the logo */
+  height: auto; /* Maintain aspect ratio */
+}

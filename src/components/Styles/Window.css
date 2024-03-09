@@ -1,0 +1,104 @@
+.chat-window {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw; /* Full viewport width */
+  height: 100vh; /* Full viewport height */
+  background-color: white;
+  overflow: hidden;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Keeping responsive adjustments for smaller devices */
+@media (max-width: 768px) {
+  .chat-window {
+    border-radius: 0; /* Full-window might not need border-radius */
+  }
+}
+
+@media (max-width: 480px) {
+  .chat-window {
+    border-radius: 0; /* Adjusting for smaller devices */
+  }
+}
+
+/* Scrollbar adjustments */
+.webchat-container::-webkit-scrollbar, 
+.messages-container::-webkit-scrollbar {
+  display: none; /* Hides scrollbar for a cleaner look */
+}
+
+.webchat-container,
+.messages-container {
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+  scrollbar-width: none; /* For Firefox */
+}
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+}
+
+
+@media (max-width: 768px) {
+  .chat-window {
+    bottom: 10px;
+    right: 10px;
+    width: calc(100% - 30px); 
+    border-radius: 10px; 
+  }
+}
+
+
+@media (max-width: 480px) {
+  .chat-window {
+    bottom: 5px;
+    right: 5px;
+    width: calc(100% - 10px); 
+    border-radius: 5px; 
+  }
+}
+
+.webchat-container::-webkit-scrollbar, 
+.messages-container::-webkit-scrollbar {
+  display: none;
+}
+
+.webchat-container,
+.messages-container {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+
+.webchat-container {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+#banner h1 {
+  font-size: calc(10px + 1.5vmin); 
+}
+
+#banner-icon {
+  width: 20%; 
+  height: auto;
+}
+
+#webchat {
+  height: calc(100vh - 130px); 
+  top: 100px; 
+}
+
+@media (max-height: 600px) {
+  #webchat {
+    height: calc(100vh - 120px); 
+    top: 80px;
+  }
+}
+/* .webchat__send-box {
+  position: sticky;
+  bottom: 0;
+} */
+
