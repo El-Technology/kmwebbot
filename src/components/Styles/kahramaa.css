@@ -2,7 +2,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@900&display=swap');
 
 .chat-header {
-  position: fixed;
+  /*position: fixed;*/
   top: 0;
   left: 0;
   width: 100%;
@@ -10,7 +10,7 @@
   justify-content: space-between;
   align-items: center;
   background-color: #fff;
-  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0.5px 20px #9c0058;
   padding: 10px;
   font-family: 'Cairo', sans-serif;
   font-weight: 900;
@@ -39,6 +39,10 @@
 .contact-and-minimize {
   display: flex;
   align-items: center;
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+  margin-top: 20px;
 }
 
 .contact-us-container {
@@ -48,12 +52,15 @@
   background-color: #f5f5f5;
   border-radius: 15px;
   padding: 5px 10px;
-  margin-right: 10px; /* Ensure spacing between elements */
+  
 }
 
 .beta {
   color: #9c0058;
   margin-right: 10px; /* Adjusted spacing */
+  margin-left: 10px;
+  
+  
 }
 
 .icon-phone {
@@ -82,16 +89,7 @@
     padding: 10px;
   }
 
-  .logo-and-text, .contact-and-minimize {
-    width: 100%;
-    justify-content: center;
-    text-align: center;
-    margin-bottom: 5px;
-  }
 
-  .contact-us-container, .beta, .minimize-button {
-    margin-top: 5px;
-  }
 }
 
 @media (max-width: 480px) {
@@ -166,24 +164,6 @@
   }
   
   
-  @media (max-width: 768px) {
-    .chat-window {
-      bottom: 10px;
-      right: 10px;
-      width: calc(100% - 30px); 
-      border-radius: 10px; 
-    }
-  }
-  
-  
-  @media (max-width: 480px) {
-    .chat-window {
-      bottom: 5px;
-      right: 5px;
-      width: calc(100% - 10px); 
-      border-radius: 5px; 
-    }
-  }
   
   .webchat-container::-webkit-scrollbar, 
   .messages-container::-webkit-scrollbar {
@@ -228,3 +208,26 @@
   } */
   
   
+
+  .corner {
+      background-color: #9c0058;
+      overflow: hidden;
+      position: absolute;
+      left: -3em;
+      top: 0.5em;
+      -moz-transform: rotate(-45deg);
+      -webkit-transform: rotate(-45deg);
+      transform: rotate(-45deg);
+  
+  }
+  .corner span {
+      border: 1px solid #9c0058;
+      color: #fff;
+      display: block;
+      font-size:.8em;
+      font-weight:bold;
+      padding: 0.5em 4em;
+      text-align: center;
+      text-decoration: none;
+      text-shadow: 1px 1px 1px #000;
+  }

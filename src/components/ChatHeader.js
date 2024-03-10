@@ -8,6 +8,11 @@ import { faPhone } from '@fortawesome/free-solid-svg-icons';
 const ChatHeader = ({ onMinimize }) => {
   return (
     <div className="chat-header">
+      
+        <div class="corner">
+          <span>Beta</span>
+        </div>
+      
       <div className="logo-and-text">
         <img src={logo} alt="Chatbot Logo" className="chat-logo" />
         <div>
@@ -16,7 +21,7 @@ const ChatHeader = ({ onMinimize }) => {
         </div>
       </div>
       <div className="contact-and-minimize">
-        
+      
         <div className="contact-us-container">
           <FontAwesomeIcon icon={faPhone} className="icon-phone" />
           <span>Contact Us : </span>
@@ -24,10 +29,8 @@ const ChatHeader = ({ onMinimize }) => {
           <span className="phone-number-plus"> | </span>
           <a href="tel:+97444069999" className="phone-number">+974 4449 4000  ​​</a>
         </div>
-        <div className="beta">
-          <p>BETA</p>
-        </div>
-        <button className="minimize-button" onClick={onMinimize}>-</button>
+        
+        {/* <button className="minimize-button" onClick={onMinimize}>-</button> */}
       </div>
     </div>
   );
