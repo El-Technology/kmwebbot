@@ -1,0 +1,4 @@
+{
+  "appService.defaultWebAppToDeploy": "/subscriptions/d69d8d8d-bee4-46f8-a3d3-d390eba31ba2/resourceGroups/KMchatbot/providers/Microsoft.Web/sites/km-website-aichatbot",
+  "appService.deploySubpath": "build"
+}
