@@ -1,49 +1,50 @@
 import React, { useState, useRef, useEffect } from 'react';
 import ChatHeader from './ChatHeader';
 import './Styles/kahramaa.css';
+import { v4 as uuidv4 } from 'uuid';
+import styleOptions from './Styles/ChatStyles.js'
 
 const ChatWindow = ({ onClose }) => {
     const webChatContainerRef = useRef(null);
     const [locale] = useState('en');
 
     useEffect(() => {
-        const styleOptions = {
-            hideUploadButton: true,
-            bubbleBackground: '#00000',
-            bubbleTextColor: '#000',
-            bubbleBorderColor: '#ffffff',
-            bubbleBorderRadius: 20,
-            bubbleMaxWidth: 650,    
-            sendBoxBackground: '#fafafa',
-            sendBoxTextColor: '#333',
-            sendBoxButtonColor: '#9c0058',
-            sendBoxHeight: 60,
-            bubbleFromUserBackground: '#9c0058',
-            bubbleFromUserTextColor: '#FFFFFF',
-            bubbleFromUserBorderColor: '#ffffff',
-            bubbleFromUserBorderRadius: 20,
-            bubbleFromUserMaxWidth: 650, 
-            fontSizeSmall: '80%',
-            
-            
-            
-        };
-        
-        
-        const tokenEndpointURL = 'https://defaultb7c4ca7aa4ba454eaaf5c7edf7f73e.aa.environment.api.powerplatform.com/powervirtualagents/botsbyschema/cr1eb_kahramaaWeb/directline/token?api-version=2022-03-01-preview';
-        const apiVersion = new URL(tokenEndpointURL).searchParams.get('api-version');
+        const tokenEndpointURL = 'https://directline.botframework.com/v3/directline/tokens/generate';
+        const dl_secret = "";
 
         async function fetchTokenAndRenderChat() {
             try {
-                const [directLineURL, tokenResponse] = await Promise.all([
-                    fetch(new URL(`/powervirtualagents/regionalchannelsettings?api-version=${apiVersion}`, tokenEndpointURL)).then(response => response.json()),
-                    fetch(tokenEndpointURL).then(response => response.json()),
-                ]);
-                
+                let token = getCookie('chatToken');
+                let expirationTime = getCookie('tokenExpirationTime');
+                let userId = getCookie('userId');
+
+                if (!token || !expirationTime || Date.now() >= parseInt(expirationTime)) {
+                    // Token does not exist in cookies or has expired, fetch a new one
+                    userId = `dl_${uuidv4()}`; // Generate userId in the format "dl_[uuid]"
+
+                    const tokenResponse = await fetch(tokenEndpointURL, {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${dl_secret}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            User: {
+                                id: userId,
+                                name: ""
+                            }
+                        })
+                    }).then(response => response.json());
+
+                    token = tokenResponse.token;
+                    expirationTime = Date.now() + (tokenResponse.expires_in * 1000); // Convert expires_in to milliseconds
+                    setCookie('chatToken', token, expirationTime);
+                    setCookie('tokenExpirationTime', expirationTime, expirationTime);
+                    setCookie('userId', userId); // Store userId in the cookie
+                }
+
                 const directLine = window.WebChat.createDirectLine({
-                    token: tokenResponse.token,
-                    
-                    domain: directLineURL && new URL('v3/directline', directLineURL.channelUrlsById.directline)
+                    token: token
                 });
 
                 window.WebChat.renderWebChat({
@@ -52,9 +53,8 @@ const ChatWindow = ({ onClose }) => {
                     locale,
                 }, webChatContainerRef.current);
 
-                
                 directLine.postActivity({
-                    from: { id: 'USER_ID', name: 'User' },
+                    from: { id: userId, name: 'User' },
                     name: 'startConversation',
                     type: 'event',
                     value: ''
@@ -62,34 +62,47 @@ const ChatWindow = ({ onClose }) => {
                     id => console.log(`Posted activity, assigned ID ${id}`),
                     error => console.log(`Error posting activity: ${error}`)
                 );
-                
             } catch (error) {
                 console.error('Failed to fetch token and render chat', error);
             }
         }
-
+        
         fetchTokenAndRenderChat();
     }, [locale]);
-  
-function scrollToBottom() {
-    const chatContainer = webChatContainerRef.current;
-    if (chatContainer) {
-        // Scroll to the bottom of the container
-        chatContainer.scrollTop = chatContainer.scrollHeight;
-    }
-}
-useEffect(() => {
-    const interval = setInterval(() => {
-        scrollToBottom();
-    }, 1000); 
 
-    return () => clearInterval(interval);
-}, []);
+    function setCookie(name, value, expirationTime) {
+        document.cookie = `${name}=${value}; expires=${new Date(expirationTime).toUTCString()}; path=/; Secure; SameSite=Strict`;
+    }
+
+    function getCookie(name) {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            const [cookieName, cookieValue] = cookie.trim().split('=');
+            if (cookieName === name) {
+                return cookieValue;
+            }
+        }
+        return null;
+    }
+
+    function scrollToBottom() {
+        const chatContainer = webChatContainerRef.current;
+        if (chatContainer) {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    }
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            scrollToBottom();
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, []);
 
     return (
         <div className="chat-window">
             <ChatHeader onMinimize={onClose} />
-            
             <div ref={webChatContainerRef} className="webchat-container" style={{ height: '100%', width: '100%' }}></div>
         </div>
     );
