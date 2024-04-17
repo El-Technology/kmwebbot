@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import ChatWindow from './ChatWindow';
 
 const ChatContainer = () => {
   const [isChatOpen, setChatOpen] = useState(false);
