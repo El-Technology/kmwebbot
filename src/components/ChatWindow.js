@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import ChatHeader from './ChatHeader';
+import ChatHeader from './ChatHeader.js';
 import './Styles/kahramaa.css';
 import { v4 as uuidv4 } from 'uuid';
 import styleOptions from './Styles/ChatStyles.js'
@@ -7,21 +7,19 @@ import styleOptions from './Styles/ChatStyles.js'
 const ChatWindow = ({ onClose }) => {
     const webChatContainerRef = useRef(null);
     const [locale] = useState('en');
-
+    const tokenEndpointURL = 'https://directline.botframework.com/v3/directline/tokens/generate'; // move to consts
+    const dl_secret = "f7WqBQsIg_0.RkD3v_5cT4mmoHsPfHKElq0HHWyp3q5wVKu5oj0Pjto";
+    
     useEffect(() => {
-        const tokenEndpointURL = 'https://directline.botframework.com/v3/directline/tokens/generate';
-        const dl_secret = "";
-
-        async function fetchTokenAndRenderChat() {
+        async function fetchTokenAndRenderChat() { // move to action
             try {
                 let token = getCookie('chatToken');
-                let expirationTime = getCookie('tokenExpirationTime');
                 let userId = getCookie('userId');
-
-                if (!token || !expirationTime || Date.now() >= parseInt(expirationTime)) {
+                console.log(token);
+                if (!token) {
                     // Token does not exist in cookies or has expired, fetch a new one
                     userId = `dl_${uuidv4()}`; // Generate userId in the format "dl_[uuid]"
-
+                    console.log("We are here");
                     const tokenResponse = await fetch(tokenEndpointURL, {
                         method: 'POST',
                         headers: {
@@ -31,15 +29,16 @@ const ChatWindow = ({ onClose }) => {
                         body: JSON.stringify({
                             User: {
                                 id: userId,
-                                name: ""
+                                name: "User"
                             }
                         })
                     }).then(response => response.json());
-
+                    
+                    console.log(tokenResponse);
                     token = tokenResponse.token;
-                    expirationTime = Date.now() + (tokenResponse.expires_in * 1000); // Convert expires_in to milliseconds
+                    
+                    let expirationTime = Date.now() + (tokenResponse.expires_in * 1000); // Convert expires_in to milliseconds
                     setCookie('chatToken', token, expirationTime);
-                    setCookie('tokenExpirationTime', expirationTime, expirationTime);
                     setCookie('userId', userId); // Store userId in the cookie
                 }
 
