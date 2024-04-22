@@ -37,13 +37,27 @@ export const fetchTokenAndRenderChat =
                 token: token
             });
 
+            const createSpeechRecognitionOnlyPonyfillFactory= () => {
+                const speechServicesPonyfillFactory =  window.WebChat.createBrowserWebSpeechPonyfillFactory();
+                
+                return options => {
+                  const speechServicesPonyfill = speechServicesPonyfillFactory(options);
+                  return {
+                    SpeechGrammarList: speechServicesPonyfill.SpeechGrammarList,
+                    SpeechRecognition: speechServicesPonyfill.SpeechRecognition,
+                    speechSynthesis: null,
+                    SpeechSynthesisUtterance: null
+                  };
+                };
+              }
+
             window.WebChat.renderWebChat({
                 directLine,
                 styleOptions,
                 locale,
-                webSpeechPonyfillFactory: window.WebChat.createBrowserWebSpeechPonyfillFactory()
+                webSpeechPonyfillFactory: createSpeechRecognitionOnlyPonyfillFactory(),
+                sendTypingIndicator: true
             }, webChatContainerRef.current);
-
 
             directLine.activity$
             .filter(activity => activity.locale === 'en')
@@ -66,7 +80,6 @@ export const fetchTokenAndRenderChat =
             console.error('Failed to fetch token and render chat', error);
         }
     };
-
 
     function setCookie(name, value, expirationTime) {
         document.cookie = `${name}=${value}; expires=${new Date(expirationTime).toUTCString()}; path=/; Secure; SameSite=Strict`;
