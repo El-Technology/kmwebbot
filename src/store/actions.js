@@ -36,12 +36,22 @@ export const fetchTokenAndRenderChat =
             const directLine = window.WebChat.createDirectLine({
                 token: token
             });
-                
+
             window.WebChat.renderWebChat({
                 directLine,
                 styleOptions,
                 locale,
+                webSpeechPonyfillFactory: window.WebChat.createBrowserWebSpeechPonyfillFactory()
             }, webChatContainerRef.current);
+
+
+            directLine.activity$
+            .filter(activity => activity.locale === 'en')
+            .subscribe(message => {
+            if (message) {
+                console.log("Reply", message)
+            }
+            });
 
             directLine.postActivity({
                 from: { id: userId, name: 'User' },
