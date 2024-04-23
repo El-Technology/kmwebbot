@@ -7,10 +7,10 @@ export const fetchTokenAndRenderChat =
         try {
             let token = getCookie('chatToken');
             let userId = getCookie('userId');
-            console.log(token);
+            
             if (!token) {
                 userId = `dl_${uuidv4()}`; // Generate userId in the format "dl_[uuid]"
-                console.log("We are here");
+                
                 const tokenResponse = await fetch(tokenEndpointURL, {
                     method: 'POST',
                     headers: {
@@ -25,7 +25,6 @@ export const fetchTokenAndRenderChat =
                     })
                 }).then(response => response.json());
                 
-                console.log(tokenResponse);
                 token = tokenResponse.token;
                 
                 let expirationTime = Date.now() + (tokenResponse.expires_in * 1000); // Convert expires_in to milliseconds
@@ -58,14 +57,6 @@ export const fetchTokenAndRenderChat =
                 webSpeechPonyfillFactory: createSpeechRecognitionOnlyPonyfillFactory(),
                 sendTypingIndicator: true
             }, webChatContainerRef.current);
-
-            directLine.activity$
-            .filter(activity => activity.locale === 'en')
-            .subscribe(message => {
-            if (message) {
-                console.log("Reply", message)
-            }
-            });
 
             directLine.postActivity({
                 from: { id: userId, name: 'User' },
