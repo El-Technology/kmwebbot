@@ -5,7 +5,7 @@ import { fetchTokenAndRenderChat } from '../store/actions.js';
 
 const ChatWindow = ({ onClose }) => {
     const webChatContainerRef = useRef(null);
-    const [locale] = useState('en');
+    const [locale] = useState('en-US');
     
     useEffect(() => {
         fetchTokenAndRenderChat(locale, webChatContainerRef); // Call the action function

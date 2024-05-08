@@ -5,35 +5,25 @@ import { tokenEndpointURL, dl_secret } from '../core/chatConsts.js';
 export const fetchTokenAndRenderChat = 
     async (locale, webChatContainerRef) => { // move to action
         try {
-            let token = getCookie('chatToken');
-            let userId = getCookie('userId');
-            
-            if (!token) {
-                userId = `dl_${uuidv4()}`; // Generate userId in the format "dl_[uuid]"
-                
-                const tokenResponse = await fetch(tokenEndpointURL, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${dl_secret}`,
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        User: {
-                            id: userId,
-                            name: "User"
-                        }
-                    })
-                }).then(response => response.json());
-                
-                token = tokenResponse.token;
-                
-                let expirationTime = Date.now() + (tokenResponse.expires_in * 1000); // Convert expires_in to milliseconds
-                setCookie('chatToken', token, expirationTime);
-                setCookie('userId', userId); // Store userId in the cookie
-            }
+             const userId = `dl_${uuidv4()}`; // Generate userId in the format "dl_[uuid]"
+             
+             const tokenResponse = await fetch(tokenEndpointURL, {
+                 method: 'POST',
+                 headers: {
+                     'Authorization': `Bearer ${dl_secret}`,
+                     'Content-Type': 'application/json'
+                 },
+                 body: JSON.stringify({
+                     User: {
+                         id: userId,
+                         name: "User"
+                     }
+                 })
+             }).then(response => response.json());
+        
 
             const directLine = window.WebChat.createDirectLine({
-                token: token
+                token: tokenResponse.token
             });
 
             const createSpeechRecognitionOnlyPonyfillFactory= () => {
@@ -50,12 +40,39 @@ export const fetchTokenAndRenderChat =
                 };
               }
 
+            // const styleSet = window.WebChat.createStyleSet({});
+       
+            //  styleSet.textContent = {
+            //     ...styleSet.textContent,
+            //     textAlign: 'right'
+            //  };
+
+            const store = window.WebChat.createStore({}, ({ dispatch }) => next => action => {
+                if ( action.type === 'DIRECT_LINE/INCOMING_ACTIVITY' ) {
+                    const { activity } = action.payload;
+                
+                    if ( activity.text && activity.channelData && activity.channelData.locale === 'ar' ) {
+                      setTimeout(() => {
+                        const textElements = document.querySelectorAll('.webchat__bubble__content .webchat__text-content');
+                        const elementIndex = textElements.length - 1;
+                        //textElements[elementIndex].style.direction = 'rtl';
+                        const bubbleFromUser = textElements[elementIndex].closest('.webchat__bubble');
+                        bubbleFromUser.classList.add('webchat__bubble--rtl');
+                        bubbleFromUser.setAttribute( 'dir', 'rtl' );
+                      }, 150);
+                    }
+                  }
+                 return next( action );
+              });
+
             window.WebChat.renderWebChat({
                 directLine,
                 styleOptions,
                 locale,
                 webSpeechPonyfillFactory: createSpeechRecognitionOnlyPonyfillFactory(),
-                sendTypingIndicator: true
+                sendTypingIndicator: true,
+                store
+                //styleSet
             }, webChatContainerRef.current);
 
             directLine.postActivity({
@@ -71,18 +88,3 @@ export const fetchTokenAndRenderChat =
             console.error('Failed to fetch token and render chat', error);
         }
     };
-
-    function setCookie(name, value, expirationTime) {
-        document.cookie = `${name}=${value}; expires=${new Date(expirationTime).toUTCString()}; path=/; Secure; SameSite=Strict`;
-    }
-
-    function getCookie(name) {
-        const cookies = document.cookie.split(';');
-        for (let cookie of cookies) {
-            const [cookieName, cookieValue] = cookie.trim().split('=');
-            if (cookieName === name) {
-                return cookieValue;
-            }
-        }
-        return null;
-    }
