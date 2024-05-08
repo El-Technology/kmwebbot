@@ -3,9 +3,9 @@ import styleOptions from '../components/Styles/ChatStyles.js'
 import { tokenEndpointURL, dl_secret } from '../core/chatConsts.js';
 
 export const fetchTokenAndRenderChat = 
-    async (locale, webChatContainerRef) => { // move to action
+    async (locale, webChatContainerRef) => {
         try {
-             const userId = `dl_${uuidv4()}`; // Generate userId in the format "dl_[uuid]"
+             const userId = `dl_${uuidv4()}`;
              
              const tokenResponse = await fetch(tokenEndpointURL, {
                  method: 'POST',
@@ -40,13 +40,6 @@ export const fetchTokenAndRenderChat =
                 };
               }
 
-            // const styleSet = window.WebChat.createStyleSet({});
-       
-            //  styleSet.textContent = {
-            //     ...styleSet.textContent,
-            //     textAlign: 'right'
-            //  };
-
             const store = window.WebChat.createStore({}, ({ dispatch }) => next => action => {
                 if ( action.type === 'DIRECT_LINE/INCOMING_ACTIVITY' ) {
                     const { activity } = action.payload;
@@ -55,7 +48,6 @@ export const fetchTokenAndRenderChat =
                       setTimeout(() => {
                         const textElements = document.querySelectorAll('.webchat__bubble__content .webchat__text-content');
                         const elementIndex = textElements.length - 1;
-                        //textElements[elementIndex].style.direction = 'rtl';
                         const bubbleFromUser = textElements[elementIndex].closest('.webchat__bubble');
                         bubbleFromUser.classList.add('webchat__bubble--rtl');
                         bubbleFromUser.setAttribute( 'dir', 'rtl' );
@@ -72,7 +64,6 @@ export const fetchTokenAndRenderChat =
                 webSpeechPonyfillFactory: createSpeechRecognitionOnlyPonyfillFactory(),
                 sendTypingIndicator: true,
                 store
-                //styleSet
             }, webChatContainerRef.current);
 
             directLine.postActivity({
