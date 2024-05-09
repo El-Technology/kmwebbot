@@ -1,2 +1,2 @@
 export const tokenEndpointURL = 'https://directline.botframework.com/v3/directline/tokens/generate';
-export const dl_secret = `${process.env.REACT_DL_SECRET}`;
+export const dl_secret = `${process.env.REACT_APP_DL_SECRET}`;
