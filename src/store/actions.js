@@ -6,7 +6,6 @@ export const fetchTokenAndRenderChat =
     async (locale, webChatContainerRef) => {
         try {
              const userId = `dl_${uuidv4()}`;
-             console.log(dl_secret);
              const tokenResponse = await fetch(tokenEndpointURL, {
                  method: 'POST',
                  headers: {
