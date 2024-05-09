@@ -71,8 +71,7 @@ export const fetchTokenAndRenderChat =
                 type: 'event',
                 value: ''
             }).subscribe(
-                id => console.log(`Posted activity, assigned ID ${id}`),
-                error => console.log(`Error posting activity: ${error}`)
+                
             );
         } catch (error) {
             console.error('Failed to fetch token and render chat', error);
