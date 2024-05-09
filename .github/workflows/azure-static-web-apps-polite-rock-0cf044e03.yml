@@ -19,12 +19,14 @@ jobs:
         with:
           submodules: true
           lfs: false
-      - name: Build
-        run: |
-          npm install
-          npm run build
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build React app
         env:
           REACT_APP_DL_SECRET: ${{secrets.REACT_APP_DL_SECRET}}
+        run: npm run build
+
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
@@ -39,8 +41,6 @@ jobs:
           output_location: "" # Built app content directory - optional
           skip_app_build: false
           ###### End of Repository/Build Configurations ######
-        env:
-          REACT_APP_DL_SECRET: ${{secrets.REACT_APP_DL_SECRET}}
 
   close_pull_request_job:
     if: github.event_name == 'pull_request' && github.event.action == 'closed'
